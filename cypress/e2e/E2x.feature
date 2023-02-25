@@ -6,5 +6,5 @@ Feature: Testing checkout process for a product
     Scenario: User adds a product to the cart and uses checkout to purchase
         Given I am on the ecommerce site
         When I add a product to the cart
-        Then I complete the checkout process
+        Then I should complete the checkout process
         Then I should see the order confirmation page
