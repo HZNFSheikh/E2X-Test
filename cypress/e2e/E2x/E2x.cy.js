@@ -1,5 +1,5 @@
 import {Given, When, Then, And} from '@badeball/cypress-cucumber-preprocessor';
-import E2xPO from '../../page/E2xPO';
+import E2xPO from '../../support/page/E2xPO';
 
 beforeEach( () => {
 cy.intercept('GET', `https://cornerstone-light-demo.mybigcommerce.com/search.php?search_query=Able%20Brewing%20System`).as('product-search');
@@ -17,12 +17,12 @@ Given('I am on the ecommerce site', () => {
 });
 
 When('I add a product to the cart', () => {
-    cy.get('[id="quick-search-expand"]').click();
-    cy.get('[id="nav-quick-search"]').click().type('Able Brewing System');
+    E2xPO.openSearch();
+    E2xPO.enterProduct().type('Able Brewing System');
     cy.wait('@product-search');
     cy.get('ul').children('.product').eq(0).should('contain', 'Able Brewing System').click();
     cy.url().should('contain', 'able-brewing-system');
-    cy.get('.add-to-cart-buttons').click();
+    E2xPO.addToCart().click({force: true});
     cy.wait('@add-to-cart');
     cy.contains('Proceed to checkout').click();
     cy.wait('@form');
@@ -45,7 +45,7 @@ Then('I should complete the checkout process', () => {
     cy.get('#postCodeInput').type('B25 HED')
     cy.get('#phoneInput').type('000100101');
     cy.get('#checkout-shipping-continue').click();
-    cy.get('@payment-form');
+    cy.wait(800);
     cy.get('#ccNumber').type("4" + "111 1111 1111 1111");
     cy.get('#ccExpiry').type('04/28');
     cy.get('#ccName').type(firstName + ' ' + lastName);
